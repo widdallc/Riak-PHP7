@@ -165,6 +165,13 @@ Thank you for being part of the community! We love you for it.
 
 ## License and Authors
 
+Active
+
+* Author: Gabriel Bouyssou (https://github.com/gabrielbouyssou)
+* Author: Timothee Planchais (https://github.com/timmy78)
+
+Original
+
 * Author: Christopher Mancini (https://github.com/christophermancini)
 * Author: Alex Moore (https://github.com/alexmoore)
 
