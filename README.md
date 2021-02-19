@@ -25,14 +25,14 @@ To see other clients available for use with Riak visit our
 Run the following `composer` command:
 
 ```console
-$ composer require "basho/riak": "2.0.*"
+$ composer require "widdallc/riak-php7": "1.0.*"
 ```
 
 Alternately, manually add the following to your `composer.json`, in the `require` section:
 
 ```javascript
 "require": {
-    "basho/riak": "2.0.*"
+    "widdallc/riak-php7": "1.0.*"
 }
 ```
 
@@ -50,9 +50,9 @@ The release tags of this project have been aligned with the major & minor releas
 Below is a short example of using the client. More substantial sample code is available [in examples](/examples).
 ```php
 // lib classes are included via the Composer autoloader files
-use Basho\Riak;
-use Basho\Riak\Node;
-use Basho\Riak\Command;
+use Widda\Riak;
+use Widda\Riak\Node;
+use Widda\Riak\Command;
 
 // define the connection info to our Riak nodes
 $nodes = (new Node\Builder)
