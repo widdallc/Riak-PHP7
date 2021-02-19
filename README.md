@@ -1,4 +1,4 @@
-# Riak Client for PHP
+# Riak Client for PHP 5.4 and up (made to work with PHP 7.4)
 
 **Riak PHP Client** is a client which makes it easy to communicate with [Riak](http://basho.com/riak/), an open source, distributed database that focuses on high availability, horizontal scalability, and *predictable*
 latency. Both Riak and this code is maintained by [Basho](http://www.basho.com/). 
@@ -15,7 +15,7 @@ To see other clients available for use with Riak visit our
 5. [License and Authors](#license-and-authors)
 
 
-## Installation *TODO UPDATE*
+## Installation
 
 ### Dependencies
 * **Release 2.x.x** requires PHP 5.4+
@@ -46,7 +46,7 @@ A fully traversable version of the API documentation for this library can be fou
 ### Releases
 The release tags of this project have been aligned with the major & minor release versions of Riak. For example, if you are using version 1.4.9 of Riak, then you will want the latest 1.4.* version of this library.
 
-### Example Usage *TODO UPDATE*
+### Example Usage
 Below is a short example of using the client. More substantial sample code is available [in examples](/examples).
 ```php
 // lib classes are included via the Composer autoloader files
@@ -73,6 +73,79 @@ $response = $command->execute($command);
 
 // Retrieve the Location of our newly stored object from the Response object
 $object_location = $response->getLocation();
+```
+
+Example Storing an image
+```php
+use Widda\Riak;
+use Widda\Riak\Node;
+use Widda\Riak\Command;
+
+// define the connection info to our Riak nodes
+$nodes = (new Node\Builder)->onPort(8098)->buildCluster('riak1.company.com');
+
+// instantiate the Riak client
+$riak = new Riak($nodes);
+
+$url = false;
+$headers = null;
+
+$filename = 'my_file.png';
+$prefix = null;
+
+$data = file_get_contents($filename);
+
+
+if(!empty($data)) {
+    $contentType = 'image/png';
+
+    if(!empty($contentType))
+        $headers = ['Content-Type' => $contentType];
+    	$hash = rtrim(strtr(base64_encode(sha1_file($filename, true)), '+/', '-_'), '=');
+    	$key = ($prefix ? $prefix.'_' : '').$hash;
+
+    $command = (new Command\Builder\StoreObject($riak))
+    	->buildObject($data, $headers)
+        ->buildLocation($key, 'MY_RIAK_BUCKET')
+        ->build();
+
+	$response = $command->execute();
+	
+	if($response->isSuccess()) {
+    	$url = $key;
+	}
+	else {
+    	trigger_error("Erreur Riak. Code : ".$response->getCode().", Message : ".$response->getMessage());
+	}
+}
+```
+
+Example fetching an image
+```php
+use Widda\Riak;
+use Widda\Riak\Node;
+use Widda\Riak\Command;
+
+// define the connection info to our Riak nodes
+$nodes = (new Node\Builder)->onPort(8098)->buildCluster('riak1.company.com');
+
+// instantiate the Riak client
+$riak = new Riak($nodes);
+
+$response = (new Command\Builder\FetchObject($riak))
+            ->buildLocation('MY_KEY', 'MY_RIAK_BUCKET')
+            ->build()
+            ->execute();
+
+if($response->isSuccess()) {
+    $data = $response->getDataObject()->getData();  //notice ->getObject() is now ->getDataObject()
+
+    //set the image header
+    header("Content-Type", $response->getContentType());
+
+    // display the image
+    echo $data;
+}
 ```
 
 ## Contributing

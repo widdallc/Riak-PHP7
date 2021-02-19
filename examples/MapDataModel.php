@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License.
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Basho\Riak;
+use Widda\Riak;
 
 class User
 {

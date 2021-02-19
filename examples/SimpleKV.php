@@ -17,9 +17,9 @@ specific language governing permissions and limitations under the License.
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Basho\Riak;
-use Basho\Riak\Command;
-use Basho\Riak\Node;
+use Widda\Riak;
+use Widda\Riak\Command;
+use Widda\Riak\Node;
 
 $node = (new Node\Builder)
     ->atHost('riak-test')
@@ -48,7 +48,7 @@ $command = (new Command\Builder\FetchObject($riak))
 
 $response = $command->execute();
 
-$object = $response->getObject();
+$object = $response->getDataObject();
 
 $object->getData()->country = 'USA';
 
